@@ -1,0 +1,62 @@
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace Lab10_Task1
+{
+    public partial class Form1 : Form
+    {
+        // Глобальна змінна класу (видна в усіх методах)
+        private int buttonCounter = 0;
+
+        public Form1()
+        {
+            InitializeComponent();
+            this.Text = "Динамічне створення кнопок";
+            // Підписуємося на подію клацання миші на формі
+            this.MouseClick += Form1_MouseClick;
+        }
+
+        // Обробник події клацання миші на формі
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
+            // 1. Створюємо екземпляр класу Button (динамічно)
+            Button dynamicButton = new Button();
+
+            // 2. Встановлюємо батьківський елемент (ця форма)
+            dynamicButton.Parent = this;
+
+            // 3. Задаємо положення лівого верхнього кута з координат курсора
+            dynamicButton.Location = new Point(e.X, e.Y);
+
+            // 4. Задаємо розмір кнопки
+            dynamicButton.Size = new Size(120, 40);
+
+            // 5. Виводимо напис на кнопці з координатами її лівого верхнього кута
+            dynamicButton.Text = $"Кнопка {++buttonCounter}\n({e.X}, {e.Y})";
+
+            // 6. Додаткові налаштування для зручності
+            dynamicButton.BackColor = Color.LightBlue;
+            dynamicButton.Font = new Font("Arial", 8, FontStyle.Bold);
+
+            // 7. Додаємо обробник події для самої кнопки (не обов'язково, але показово)
+            dynamicButton.Click += DynamicButton_Click;
+
+            // Примітка: не потрібно окремо викликати this.Controls.Add(dynamicButton),
+            // оскільки присвоєння Parent = this автоматично додає елемент до коллекції Controls.
+        }
+
+        // Обробник натискання на динамічно створену кнопку
+        private void DynamicButton_Click(object sender, EventArgs e)
+        {
+            Button clickedButton = sender as Button;
+            if (clickedButton != null) // перевірка за допомогою as
+            {
+                MessageBox.Show($"Ви натиснули на кнопку з координатами:\n{clickedButton.Text}",
+                                "Інформація про кнопку",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+            }
+        }
+    }
+}
